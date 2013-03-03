@@ -26,7 +26,7 @@ void average_lines
         );
     distinct_new_records.at(0)->slot_name =
         assembled_lines->lines[0][columns::WuHistory::SlotName];
-    strncpy
+    /*strncpy
     (
          distinct_new_records.at(0)->core_type
         ,project_to_core_type->at(distinct_new_records.at(0)->project)
@@ -34,7 +34,7 @@ void average_lines
          (
              project_to_core_type->at(distinct_new_records.at(0)->project)
          )
-    );
+    );*/
     distinct_new_records.at(0)->core_version =
         algorithms::round
         (
@@ -184,13 +184,13 @@ void average_lines
              averaged_new_records->at(record)->slot_name
             ,distinct_new_records.at(record)->slot_name
             ,strlen(distinct_new_records.at(record)->slot_name)
-        );
+        );/*
         strncpy
         (
              averaged_new_records->at(record)->core_type
             ,distinct_new_records.at(record)->core_type
             ,strlen(distinct_new_records.at(record)->core_type)
-        );/*
+        );
         averaged_new_records->at(record)->core_version =
             distinct_new_records.at(record)->core_version;
         strncpy
