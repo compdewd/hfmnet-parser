@@ -123,11 +123,13 @@ RETURN_CODE file_functions::write_array
     {
         file.write(single_line, len_single_line_assembly);
         file.close();
+        delete [] single_line;
 
         return OPERATION_SUCCESSFUL;
     }
     else
     {
+        delete [] single_line;
         return FILE_UNOPENED;
     }
 }
@@ -339,12 +341,14 @@ RETURN_CODE file_functions::write_averaged_new_records
     if (file.is_open())
     {
         file.write(single_line, len_single_line_assembly);
+        delete [] single_line;
         file.close();
 
         return OPERATION_SUCCESSFUL;
     }
     else
     {
+        delete [] single_line;
         return FILE_UNOPENED;
     }
 }

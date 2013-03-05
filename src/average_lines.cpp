@@ -76,6 +76,7 @@ void average_lines
             ,columns::ProjectInfo::ProjectId
             ,charstr_project
         );
+    delete [] charstr_project;
     distinct_new_records.at(0)->project_performance_values.points_per_day.insert
     (
          distinct_new_records.at(0)->
@@ -104,25 +105,29 @@ void average_lines
                   project_performance_values.time_per_frame.at(0)
          )
     );
-    //cout <<  << endl;
     distinct_new_records.at(0)->date =
         string(assembled_lines->lines[0][columns::WuHistory::DateDownloaded]);
 
-
-/*
-    for (ARRAY_INDEX row = 1;
+    for (ARRAY_INDEX row = 1, pos_distinct_new_record = 1;
          row < assembled_lines->rows;
          ++row)
     {
+        bool record_line_match;
+
         for (ARRAY_INDEX pos_record = 0;
              pos_record < distinct_new_records.size();
              ++pos_record)
         {
-            bool record_line_match =
+            record_line_match =
                 algorithms::compare
                 (
                      distinct_new_records[pos_record]->project
-                    ,assembled_lines->lines[row][columns::WuHistory::ProjectId]
+                    ,common_functions::convert_to_int
+                     (
+                         assembled_lines->lines
+                            [row]
+                            [columns::WuHistory::ProjectId]
+                     )
                 )
                 &
                 algorithms::compare
@@ -164,18 +169,189 @@ void average_lines
                      [row]
                      [columns::WuHistory::Username]
                 );
-            if (record_line_match == false)
+            if (record_line_match == true)
             {
-                distinct_new_records.insert
+                // Add to the collection of times per frame and points per day
+                distinct_new_records.at(pos_record)->
+                    project_performance_values.time_per_frame.insert
                 (
-                     distinct_new_records.end()
-                    ,new distinct_new_record
+                     distinct_new_records.at(pos_record)->
+                         project_performance_values.time_per_frame.end()
+                    ,common_functions::convert_to_int
+                     (
+                         assembled_lines->
+                            lines[row][columns::WuHistory::FrameTime]
+                     )
                 );
 
+                distinct_new_records.at(pos_record)->
+                    project_performance_values.points_per_day.insert
+                (
+                     distinct_new_records.at(pos_record)->
+                         project_performance_values.points_per_day.end()
+                    ,calculate_points_per_day
+                     (
+                          common_functions::convert_to_float
+                          (
+                              ProjectInfo->fca.content_array
+                                 [row_ProjectInfo]
+                                 [columns::ProjectInfo::BasePoints]
+                          )
+                         ,common_functions::convert_to_float
+                          (
+                              ProjectInfo->fca.content_array
+                                 [row_ProjectInfo]
+                                 [columns::ProjectInfo::FinalDeadline]
+                          )
+                         ,common_functions::convert_to_float
+                          (
+                              ProjectInfo->fca.content_array
+                                 [row_ProjectInfo]
+                                 [columns::ProjectInfo::KFactor]
+                          )
+                         ,distinct_new_records.at(pos_record)->
+                              project_performance_values.time_per_frame.at
+                              (
+                                  distinct_new_records.
+                                      at(pos_record)->
+                                      project_performance_values.
+                                      time_per_frame.
+                                      size()
+                                  - 1
+                              )
+                     )
+                );
+
+                break;
             }
         }
+
+        if (record_line_match == false)
+        {
+            distinct_new_records.insert
+            (
+                 distinct_new_records.end()
+                ,new distinct_new_record
+            );
+
+            distinct_new_records.at(pos_distinct_new_record)->project =
+                common_functions::convert_to_int
+                (
+                    assembled_lines->
+                        lines[row][columns::WuHistory::ProjectId]
+                );
+            distinct_new_records.at(pos_distinct_new_record)->slot_name =
+                assembled_lines->lines[row][columns::WuHistory::SlotName];
+            LENGTH len_project =
+                strlen
+                (
+                    project_to_core_type->
+                        at(distinct_new_records.
+                           at(pos_distinct_new_record)->project)
+                );
+            distinct_new_records.at(pos_distinct_new_record)->core_type =
+                new char [len_project + 1];
+            strncpy
+            (
+                 distinct_new_records.at(pos_distinct_new_record)->core_type
+                ,project_to_core_type->
+                     at(distinct_new_records.
+                        at(pos_distinct_new_record)->project)
+                ,strlen
+                 (
+                     project_to_core_type->
+                        at(distinct_new_records.
+                           at(pos_distinct_new_record)->project)
+                 )
+            );
+            distinct_new_records.at(pos_distinct_new_record)->
+                core_type[len_project] = '\0';
+            distinct_new_records.at(pos_distinct_new_record)->
+                core_version =
+                    algorithms::round
+                    (
+                         common_functions::convert_to_float
+                         (
+                             assembled_lines->
+                                lines[row][columns::WuHistory::CoreVersion]
+                         )
+                        ,2
+                    );
+            distinct_new_records.at(pos_distinct_new_record)->username =
+                assembled_lines->lines[row][columns::WuHistory::Username];
+            distinct_new_records.at(pos_distinct_new_record)->
+                project_performance_values.time_per_frame.insert
+            (
+                 distinct_new_records.at(pos_distinct_new_record)->
+                     project_performance_values.time_per_frame.end()
+                ,common_functions::convert_to_int
+                 (
+                     assembled_lines->
+                        lines[row][columns::WuHistory::FrameTime]
+                 )
+            );
+            CHARSTR charstr_project =
+                common_functions::convert_to_charstr
+                (
+                     distinct_new_records.at(pos_distinct_new_record)->
+                         project
+                );
+            ARRAY_INDEX row_ProjectInfo =
+                algorithms::find
+                (
+                     ProjectInfo->fca.content_array
+                    ,0
+                    ,ProjectInfo->fci.rows
+                    ,columns::ProjectInfo::ProjectId
+                    ,charstr_project
+                );
+            delete [] charstr_project;
+            distinct_new_records.at(pos_distinct_new_record)->
+                project_performance_values.points_per_day.insert
+            (
+                 distinct_new_records.at(pos_distinct_new_record)->
+                     project_performance_values.points_per_day.end()
+                ,calculate_points_per_day
+                 (
+                      common_functions::convert_to_float
+                      (
+                          ProjectInfo->fca.content_array
+                          [row_ProjectInfo]
+                          [columns::ProjectInfo::BasePoints]
+                      )
+                     ,common_functions::convert_to_float
+                      (
+                          ProjectInfo->fca.content_array
+                          [row_ProjectInfo]
+                          [columns::ProjectInfo::FinalDeadline]
+                      )
+                     ,common_functions::convert_to_float
+                      (
+                          ProjectInfo->fca.content_array
+                          [row_ProjectInfo]
+                          [columns::ProjectInfo::KFactor]
+                      )
+                     ,distinct_new_records.at(pos_distinct_new_record)->
+                          project_performance_values.time_per_frame.at
+                          (
+                              distinct_new_records.
+                                  at(pos_distinct_new_record)->
+                                  project_performance_values.
+                                  time_per_frame.
+                                  size()
+                              - 1
+                          )
+                 )
+            );
+            distinct_new_records.at(pos_distinct_new_record)->date =
+                string
+                (
+                    assembled_lines->
+                        lines[row][columns::WuHistory::DateDownloaded]
+                );
+            ++pos_distinct_new_record;
+        }
     }
-    */
 
     averaged_new_records = new vector<averaged_new_record *>;
     for (POSITION record = 0; record < distinct_new_records.size(); ++record)
@@ -251,5 +427,8 @@ void average_lines
             );
         averaged_new_records->at(record)->date =
             distinct_new_records.at(0)->date;
+
+        delete [] distinct_new_records.at(record)->core_type;
+        delete distinct_new_records.at(record);
     }
 }

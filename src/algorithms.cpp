@@ -177,6 +177,14 @@ bool algorithms::compare(float input_1, float input_2)
         return false;
 }
 
+bool algorithms::compare(int input_1, int input_2)
+{
+    if (input_1 == input_2)
+        return true;
+    else
+        return false;
+}
+
 bool algorithms::isdigit(char input)
 {
     if (input >= '0' && input <= '9')

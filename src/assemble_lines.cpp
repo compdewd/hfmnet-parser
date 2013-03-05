@@ -117,6 +117,7 @@ lines *assemble_lines(file *WuHistory
             {
                 delete lines_to_assemble[i];
             }
+            delete [] selected_core_type;
 
             return assembled_lines;
         }

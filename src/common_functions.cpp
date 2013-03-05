@@ -18,6 +18,7 @@ int common_functions::get_num_lines(FILE_CONTENT content)
         {
             ++num_lines;
         }
+        delete [] buffer;
     }
 
     return num_lines;

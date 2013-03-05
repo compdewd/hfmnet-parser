@@ -216,9 +216,9 @@ int main(int argc, char **argv)
             ,&(file_array[SLOTNAMES])
         )
     );
-/*
+
     // Cleanup
-    for (int i = 0; i < NUM_FILES; ++i)
+    for (unsigned int i = 0; i < NUM_FILES; ++i)
     {
         file_array[i].fca.cleanUp
         (
@@ -227,15 +227,21 @@ int main(int argc, char **argv)
         );
         file_array[i].cleanUp();
     }
-
     assembled_lines->cleanUp();
+    for (unsigned int i = 0; i < averaged_new_records->size(); ++i)
+    {
+        delete [] averaged_new_records->at(i)->slot_name;
+        delete [] averaged_new_records->at(i)->core_type;
+        delete [] averaged_new_records->at(i)->username;
+        delete averaged_new_records->at(i);
+    }
 
     // Tell the user that we're finished
     cout << endl << endl << "All done!";
 
     // Wait for user to confirm exit
     atexit(common_functions::wait_for_user);
-*/
+
     // Return success!
     return 0;
 }

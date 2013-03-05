@@ -27,6 +27,7 @@ namespace algorithms
     bool compare(CONST_CHARSTR, CONST_CHARSTR);
     bool compare(const char, const char);
     bool compare(float, float);
+    bool compare(int, int);
     bool isdigit(char);
     float round(float, int);
 }

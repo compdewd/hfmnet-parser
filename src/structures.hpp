@@ -24,7 +24,6 @@ public:
 	AMOUNT rows;
 	AMOUNT columns;
 	LENGTH longest_field;
-	RETURN_CODE return_code;
 };
 
 // file_content_array
@@ -59,6 +58,7 @@ public:
 
 	void cleanUp()
 	{
+	    fc.cleanUp();
         delete [] filename;
         filename = 0;
     }
