@@ -9,7 +9,7 @@ void average_lines
     ,file *ProjectInfo
     ,file *SlotNames
     ,PROJECT_TO_CORE_TYPE *project_to_core_type
-    ,vector<averaged_new_record *> *averaged_new_records
+    ,vector<averaged_new_record *> *&averaged_new_records
 )
 {
     vector<distinct_new_record *> distinct_new_records;
@@ -26,7 +26,13 @@ void average_lines
         );
     distinct_new_records.at(0)->slot_name =
         assembled_lines->lines[0][columns::WuHistory::SlotName];
-    /*strncpy
+    LENGTH len_project =
+        strlen
+        (
+            project_to_core_type->at(distinct_new_records.at(0)->project)
+        );
+    distinct_new_records.at(0)->core_type = new char [len_project + 1];
+    strncpy
     (
          distinct_new_records.at(0)->core_type
         ,project_to_core_type->at(distinct_new_records.at(0)->project)
@@ -34,7 +40,8 @@ void average_lines
          (
              project_to_core_type->at(distinct_new_records.at(0)->project)
          )
-    );*/
+    );
+    distinct_new_records.at(0)->core_type[len_project] = '\0';
     distinct_new_records.at(0)->core_version =
         algorithms::round
         (
@@ -97,6 +104,7 @@ void average_lines
                   project_performance_values.time_per_frame.at(0)
          )
     );
+    //cout <<  << endl;
     distinct_new_records.at(0)->date =
         string(assembled_lines->lines[0][columns::WuHistory::DateDownloaded]);
 
@@ -179,26 +187,40 @@ void average_lines
         );
         averaged_new_records->at(record)->project =
             distinct_new_records.at(record)->project;
+        LENGTH len_slot_name = strlen(distinct_new_records.at(record)->slot_name);
+        averaged_new_records->at(record)->slot_name =
+            new char [len_slot_name + 1];
         strncpy
         (
              averaged_new_records->at(record)->slot_name
             ,distinct_new_records.at(record)->slot_name
             ,strlen(distinct_new_records.at(record)->slot_name)
-        );/*
+        );
+        averaged_new_records->at(record)->slot_name[len_slot_name] = '\0';
+        LENGTH len_core_type =
+            strlen(distinct_new_records.at(record)->core_type);
+        averaged_new_records->at(record)->core_type =
+            new char [len_core_type + 1];
         strncpy
         (
              averaged_new_records->at(record)->core_type
             ,distinct_new_records.at(record)->core_type
             ,strlen(distinct_new_records.at(record)->core_type)
         );
+        averaged_new_records->at(record)->core_type[len_core_type] = '\0';
         averaged_new_records->at(record)->core_version =
             distinct_new_records.at(record)->core_version;
+        LENGTH len_username =
+            strlen(distinct_new_records.at(record)->username);
+        averaged_new_records->at(record)->username =
+            new char [len_username + 1];
         strncpy
         (
              averaged_new_records->at(record)->username
             ,distinct_new_records.at(record)->username
             ,strlen(distinct_new_records.at(record)->username)
         );
+        averaged_new_records->at(record)->username[len_username] = '\0';
         averaged_new_records->at(record)->averaged_points_per_day = 0;
         averaged_new_records->at(record)->averaged_time_per_frame = 0;
         for (POSITION pos_value = 0;
@@ -228,6 +250,6 @@ void average_lines
                     project_performance_values.time_per_frame.size()
             );
         averaged_new_records->at(record)->date =
-            distinct_new_records.at(0)->date;*/
+            distinct_new_records.at(0)->date;
     }
 }

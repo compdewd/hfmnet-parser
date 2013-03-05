@@ -10,6 +10,7 @@ namespace common_functions
     int convert_to_int(CHARSTR);
     float convert_to_float(CHARSTR);
     CHARSTR convert_to_charstr(float);
+    CHARSTR convert_to_charstr(unsigned int);
     void fill(CHARSTR &, LENGTH, char);
     void wait_for_user();
 }

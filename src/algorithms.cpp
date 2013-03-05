@@ -188,11 +188,11 @@ bool algorithms::isdigit(char input)
 float algorithms::round(float input, int decimal_places)
 {
     int power_of_ten = 1;
-	for (int i = 0; i < decimal_places + 1; ++i)
+	for (int i = 0; i < decimal_places; ++i)
 	{
 		power_of_ten *= 10;
 	}
-	int integer = static_cast<int>(floor(input + 0.5));
+	int integer = static_cast<int>(floor(input * power_of_ten + 0.5));
 	float new_float = static_cast<float>(integer) / power_of_ten;
 
 	return new_float;

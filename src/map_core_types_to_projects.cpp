@@ -28,25 +28,4 @@ void map_core_types_to_projects
                 )
             );
     }
-
-    /*for (int i = 0; i < project_to_core_type->size(); ++i)
-    {
-        cout << common_functions::convert_to_int
-                     (
-                         ProjectInfo->fca.content_array
-                         [i]
-                         [columns::ProjectInfo::ProjectId]
-                     )
-                     << " : "
-        << project_to_core_type->at
-        (
-         common_functions::convert_to_int
-                     (
-                         ProjectInfo->fca.content_array
-                         [i]
-                         [columns::ProjectInfo::ProjectId]
-                     )
-         )
-             << "        ";
-    }*/
 }

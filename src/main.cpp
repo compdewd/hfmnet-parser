@@ -35,9 +35,8 @@ namespace columns
     namespace SlotNames
     {
         const unsigned int SlotName = 0;
-        const unsigned int Chipset = 1;
-        const unsigned int Model = 2;
-        const unsigned int total = 3;
+        const unsigned int Chipset_and_Model = 1;
+        const unsigned int total = 2;
     }
 }
 
@@ -146,6 +145,14 @@ int main(int argc, char **argv)
         ,&(file_array[PROJECTINFO])
     );
 
+    // Map chipset and model to slot names
+    SLOT_NAME_TO_CHIPSET_AND_MODEL slot_name_to_chipset_and_model;
+    map_slot_name_to_chipset_and_models
+    (
+         &slot_name_to_chipset_and_model
+        ,&(file_array[SLOTNAMES])
+    );
+
     // Get core types used in the WU history
     CORE_TYPES core_types;
     get_core_types
@@ -197,7 +204,7 @@ int main(int argc, char **argv)
         ,&project_to_core_type
         ,averaged_new_records
     );
-/*
+
     // Write the averaged lines to a file
     handle_return_code
     (
@@ -205,9 +212,11 @@ int main(int argc, char **argv)
         (
              filename_finished_product
             ,averaged_new_records
+            ,&slot_name_to_chipset_and_model
+            ,&(file_array[SLOTNAMES])
         )
     );
-
+/*
     // Cleanup
     for (int i = 0; i < NUM_FILES; ++i)
     {

@@ -128,6 +128,21 @@ CHARSTR common_functions::convert_to_charstr(float input)
     return charstr;
 }
 
+CHARSTR common_functions::convert_to_charstr(unsigned int input)
+{
+    stringstream strstream;
+    strstream << input;
+    string str = strstream.str();
+    LENGTH len_str = str.length();
+    char *charstr = new char [len_str + 1];
+    for (POSITION i = 0; i < len_str; ++i)
+    {
+        charstr[i] = str[i];
+    }
+    charstr[len_str] = '\0';
+    return charstr;
+}
+
 void common_functions::fill(CHARSTR &destination, LENGTH length, char filler)
 {
     for (POSITION i = 0; i < length; ++i)

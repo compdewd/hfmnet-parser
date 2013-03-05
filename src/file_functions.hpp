@@ -12,6 +12,8 @@ namespace file_functions
     (
          FILENAME
         ,std::vector<averaged_new_record *> *
+        ,SLOT_NAME_TO_CHIPSET_AND_MODEL *
+        ,file *
     );
 }
 

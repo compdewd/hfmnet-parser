@@ -35,6 +35,7 @@ typedef char * CHARSTR;
 typedef char * CORE_TYPE;
 typedef char * SLOT_NAME;
 typedef char * USERNAME;
+typedef char * CHIPSET_AND_MODEL;
 typedef char *** FILE_CONTENT_ARRAY;
 typedef char *** ASSEMBLED_LINES;
 typedef const char * FILENAME;
@@ -46,10 +47,10 @@ typedef std::vector<SUB_LINES_TO_ASSEMBLE *> LINES_TO_ASSEMBLE;
 typedef std::vector<CORE_TYPE> CORE_TYPES;
 typedef std::vector<AVERAGED_TPF_AND_PPD> PROJECT_AVERAGED_VALUES;
 typedef std::map<PROJECT,CORE_TYPE> PROJECT_TO_CORE_TYPE;
+typedef std::map<SLOT_NAME,CHIPSET_AND_MODEL> SLOT_NAME_TO_CHIPSET_AND_MODEL;
 typedef std::map<PROJECT,PROJECT_AVERAGED_VALUES>
     PROJECT_TO_PROJECT_AVERAGED_VALUES;
-typedef std::map<SLOT_NAME_AND_CORE_VERSION, PROJECT_TO_PROJECT_AVERAGED_VALUES>
-    SLOT_AND_CORE_VERSION_TO_PROJECT_TO_PROJECT_AVERAGED_VALUES;
+
 typedef struct lines LINES;
 
 enum RETURN_CODE
@@ -73,6 +74,7 @@ enum RETURN_CODE
 #include "get_core_types.hpp"
 #include "handle_return_code.hpp"
 #include "map_core_types_to_projects.hpp"
+#include "map_slot_name_to_chipset_and_models.hpp"
 #include "output_core_types.hpp"
 #include "request_core_type.hpp"
 
@@ -103,8 +105,7 @@ namespace columns
 	namespace SlotNames
 	{
 		extern const unsigned int SlotName;
-		extern const unsigned int Chipset;
-		extern const unsigned int Model;
+		extern const unsigned int Chipset_and_Model;
 	}
 }
 

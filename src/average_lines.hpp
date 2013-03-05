@@ -7,6 +7,6 @@ void average_lines(lines *
                   ,file *
                   ,file *
                   ,PROJECT_TO_CORE_TYPE *
-                  ,std::vector<averaged_new_record *> *);
+                  ,std::vector<averaged_new_record *> *&);
 
 #endif

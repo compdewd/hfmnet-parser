@@ -4,7 +4,7 @@
 using namespace std;
 
 RETURN_CODE file_functions::get_file_size(FILENAME filename
-                         ,FILE_SIZE file_size)
+                                        ,FILE_SIZE file_size)
 {
     ifstream file;
 
@@ -135,14 +135,51 @@ RETURN_CODE file_functions::write_array
 RETURN_CODE file_functions::write_averaged_new_records
 (
      FILENAME filename
-    ,vector<averaged_new_record *> * averaged_new_records
+    ,vector<averaged_new_record *> *averaged_new_records
+    ,SLOT_NAME_TO_CHIPSET_AND_MODEL *slot_name_to_chipset_and_model
+    ,file *SlotNames
 )
 {
     vector<char> single_line_assembly;
 
     for (ARRAY_INDEX row = 0; row < averaged_new_records->size(); ++row)
     {
-        char *project =
+        // Chipset and Model
+        char *slot_name =
+            SlotNames->fca.content_array
+                [
+                    algorithms::find
+                    (
+                         SlotNames->fca.content_array
+                        ,0
+                        ,SlotNames->fci.rows - 1
+                        ,columns::SlotNames::SlotName
+                        ,averaged_new_records->at(row)->slot_name
+                    )
+                ]
+                [columns::SlotNames::SlotName];
+        for (ARRAY_INDEX character = 0;
+             character <
+                 strlen
+                 (
+                     slot_name_to_chipset_and_model->at(slot_name)
+                 );
+             ++character)
+        {
+            single_line_assembly.insert
+            (
+                 single_line_assembly.end()
+                ,slot_name_to_chipset_and_model->at(slot_name)[character]
+            );
+        }
+        single_line_assembly.insert
+        (
+             single_line_assembly.end()
+            ,(*field_delimiter)
+        );
+
+        // Project
+        CHARSTR project =
             common_functions::convert_to_charstr
             (
                  averaged_new_records->at(row)->project
@@ -163,93 +200,8 @@ RETURN_CODE file_functions::write_averaged_new_records
              single_line_assembly.end()
             ,(*field_delimiter)
         );
-        for (ARRAY_INDEX character = 0;
-             character < strlen(averaged_new_records->at(row)->slot_name);
-             ++character)
-        {
-            single_line_assembly.insert
-            (
-                 single_line_assembly.end()
-                ,averaged_new_records->at(row)->slot_name[character]
-            );
-        }
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
-        for (ARRAY_INDEX character = 0;
-             character < strlen(averaged_new_records->at(row)->core_type);
-             ++character)
-        {
-            single_line_assembly.insert
-            (
-                 single_line_assembly.end()
-                ,averaged_new_records->at(row)->core_type[character]
-            );
-        }
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
-        char *core_version =
-            common_functions::convert_to_charstr
-            (
-                 averaged_new_records->at(row)->core_version
-            );
-        for (ARRAY_INDEX character = 0;
-             character < strlen(core_version);
-             ++character)
-        {
-            single_line_assembly.insert
-            (
-                 single_line_assembly.end()
-                ,core_version[character]
-            );
-        }
-        delete [] core_version;
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
-        for (ARRAY_INDEX character = 0;
-             character < strlen(averaged_new_records->at(row)->username);
-             ++character)
-        {
-            single_line_assembly.insert
-            (
-                 single_line_assembly.end()
-                ,averaged_new_records->at(row)->username[character]
-            );
-        }
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
-        char *averaged_points_per_day =
-            common_functions::convert_to_charstr
-            (
-                 averaged_new_records->at(row)->averaged_points_per_day
-            );
-        for (ARRAY_INDEX character = 0;
-             character < strlen(averaged_points_per_day);
-             ++character)
-        {
-            single_line_assembly.insert
-            (
-                 single_line_assembly.end()
-                ,averaged_points_per_day[character]
-            );
-        }
-        delete [] averaged_points_per_day;
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
+
+        // Time per frame
         char *averaged_time_per_frame =
             common_functions::convert_to_charstr
             (
@@ -271,6 +223,90 @@ RETURN_CODE file_functions::write_averaged_new_records
              single_line_assembly.end()
             ,(*field_delimiter)
         );
+
+        // Points per day
+        char *averaged_points_per_day =
+            common_functions::convert_to_charstr
+            (
+                 averaged_new_records->at(row)->averaged_points_per_day
+            );
+        for (ARRAY_INDEX character = 0;
+             character < strlen(averaged_points_per_day);
+             ++character)
+        {
+            single_line_assembly.insert
+            (
+                 single_line_assembly.end()
+                ,averaged_points_per_day[character]
+            );
+        }
+        delete [] averaged_points_per_day;
+        single_line_assembly.insert
+        (
+             single_line_assembly.end()
+            ,(*field_delimiter)
+        );
+
+        // Core type
+        for (ARRAY_INDEX character = 0;
+             character < strlen(averaged_new_records->at(row)->core_type);
+             ++character)
+        {
+            single_line_assembly.insert
+            (
+                 single_line_assembly.end()
+                ,averaged_new_records->at(row)->core_type[character]
+            );
+        }
+        single_line_assembly.insert
+        (
+             single_line_assembly.end()
+            ,(*field_delimiter)
+        );
+
+        // Core version
+        char *core_version =
+            common_functions::convert_to_charstr
+            (
+                 averaged_new_records->at(row)->core_version
+            );
+        for (ARRAY_INDEX character = 0;
+             character < strlen(core_version);
+             ++character)
+        {
+            single_line_assembly.insert
+            (
+                 single_line_assembly.end()
+                ,core_version[character]
+            );
+        }
+        delete [] core_version;
+        single_line_assembly.insert
+        (
+             single_line_assembly.end()
+            ,(*field_delimiter)
+        );
+
+        // Username
+        for (ARRAY_INDEX character = 0;
+             character < strlen(averaged_new_records->at(row)->username);
+             ++character)
+        {
+            single_line_assembly.insert
+            (
+                 single_line_assembly.end()
+                ,averaged_new_records->at(row)->username[character]
+            );
+        }
+        single_line_assembly.insert
+        (
+             single_line_assembly.end()
+            ,(*field_delimiter)
+        );
+
+
+
+        // Date
         for (ARRAY_INDEX character = 0;
              character < DATE_LENGTH;
              ++character)
@@ -281,11 +317,6 @@ RETURN_CODE file_functions::write_averaged_new_records
                 ,averaged_new_records->at(row)->date[character]
             );
         }
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
         single_line_assembly.insert
         (
              single_line_assembly.end()
@@ -301,7 +332,6 @@ RETURN_CODE file_functions::write_averaged_new_records
         single_line[i] = single_line_assembly[i];
         cout << single_line_assembly[i];
     }
-    cout << len_single_line_assembly;
     single_line[len_single_line_assembly] = 0x00;
 
     ofstream file;
