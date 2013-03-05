@@ -9,7 +9,7 @@ It is important to note that this code does not incorporate serious error checki
 How to Use
 ----------
 There are some preliminary steps that must be taken before one can properly use the program compiled from this source code.
-Here are 13 easy steps to get this program to actually work rather than be a pile of source code:
+Here are 14 easy steps to get this program to actually work rather than be a pile of source code:
 + Own a graphics card powerful enough for [Folding@Home](http://folding.stanford.edu/).
 + Own and successfully run a copy of [Folding@Home](http://folding.stanford.edu/) using your graphics card. (For support see [The Folding@Home Support Forum](http://foldingforum.org/index.php).)
 + Own a copy of [HFM.NET](http://code.google.com/p/hfm-net/) and run Folding@Home and HFM.NET long enough to get some data.
@@ -21,6 +21,7 @@ Here are 13 easy steps to get this program to actually work rather than be a pil
 + Make sure the CSV file of the "WuHistory.db3" file is named "WuHistory.csv"
 + While still in HFM.NET's data files directory, open the "ProjectInfo.tab" file in your favorite text editor and find-and-replace every tab with a comma making sure that the conditions mentioned for the "WuHistory.csv" file are also met with this file.
 + Save the file in the same directory that the "WuHistory.csv" file is located (which should be the same directory as the ".exe" file that was produced by compiling this source code).
-+ Run this program and select THE NUMBER of the core type you want to have output and the WU data averaged.
-+ The program should output two CSV files, of which the one containing the averaged data is the one that contains the averaged data.
-+ Be nice and submit your data to [The Folding@Home GPU Statistics Database](http://www.http://compdewddevelopment.com/projects/fah-gpu-statistics-database/add.php) :D
++ Create a file named "SlotNames.csv" that contains the slot name found in the "WuHistory.csv" file, then a comma, and then the chipset and model of the graphics card as one field
++ Run this compiled program and select THE NUMBER of the core type you want to have output and averaged.
++ The program should output two CSV files into the the C: drive root directory, of which the one containing a filtered version of "WuHistory.csv" is "Hello.csv", and the one containing the averaged data is "World.csv"
++ Be nice and submit your data to [The Folding@Home GPU Statistics Database](http://www.http://compdewddevelopment.com/redirect.php?target=add-to-fah-gpu-database) :D
