@@ -306,43 +306,6 @@ void average_lines
                     ,charstr_project
                 );
             delete [] charstr_project;
-            distinct_new_records.at(pos_distinct_new_record)->
-                project_performance_values.points_per_day.insert
-            (
-                 distinct_new_records.at(pos_distinct_new_record)->
-                     project_performance_values.points_per_day.end()
-                ,calculate_points_per_day
-                 (
-                      common_functions::convert_to_float
-                      (
-                          ProjectInfo->fca.content_array
-                          [row_ProjectInfo]
-                          [columns::ProjectInfo::BasePoints]
-                      )
-                     ,common_functions::convert_to_float
-                      (
-                          ProjectInfo->fca.content_array
-                          [row_ProjectInfo]
-                          [columns::ProjectInfo::FinalDeadline]
-                      )
-                     ,common_functions::convert_to_float
-                      (
-                          ProjectInfo->fca.content_array
-                          [row_ProjectInfo]
-                          [columns::ProjectInfo::KFactor]
-                      )
-                     ,distinct_new_records.at(pos_distinct_new_record)->
-                          project_performance_values.time_per_frame.at
-                          (
-                              distinct_new_records.
-                                  at(pos_distinct_new_record)->
-                                  project_performance_values.
-                                  time_per_frame.
-                                  size()
-                              - 1
-                          )
-                 )
-            );
             distinct_new_records.at(pos_distinct_new_record)->date =
                 string
                 (
@@ -397,7 +360,6 @@ void average_lines
             ,strlen(distinct_new_records.at(record)->username)
         );
         averaged_new_records->at(record)->username[len_username] = '\0';
-        averaged_new_records->at(record)->averaged_points_per_day = 0;
         averaged_new_records->at(record)->averaged_time_per_frame = 0;
         for (POSITION pos_value = 0;
              pos_value < distinct_new_records.at(record)->
@@ -411,13 +373,6 @@ void average_lines
                 distinct_new_records.at(record)->project_performance_values.
                 time_per_frame.at(pos_value);
         }
-        averaged_new_records->at(record)->averaged_points_per_day =
-            static_cast<AMOUNT>
-            (
-                averaged_new_records->at(record)->averaged_points_per_day /
-                distinct_new_records.at(record)->
-                    project_performance_values.points_per_day.size()
-            );
         averaged_new_records->at(record)->averaged_time_per_frame =
             static_cast<AMOUNT>
             (
@@ -425,8 +380,32 @@ void average_lines
                 distinct_new_records.at(record)->
                     project_performance_values.time_per_frame.size()
             );
+        averaged_new_records->at(record)->averaged_points_per_day =
+            calculate_points_per_day
+            (
+                common_functions::convert_to_float
+                (
+                    ProjectInfo->fca.content_array
+                    [row_ProjectInfo]
+                    [columns::ProjectInfo::BasePoints]
+                )
+                ,common_functions::convert_to_float
+                (
+                    ProjectInfo->fca.content_array
+                    [row_ProjectInfo]
+                    [columns::ProjectInfo::FinalDeadline]
+                )
+                ,common_functions::convert_to_float
+                (
+                    ProjectInfo->fca.content_array
+                    [row_ProjectInfo]
+                    [columns::ProjectInfo::KFactor]
+                )
+                ,averaged_new_records->at(record)->averaged_time_per_frame
+            );
+
         averaged_new_records->at(record)->date =
-            distinct_new_records.at(0)->date;
+            distinct_new_records.at(record)->date;
 
         delete [] distinct_new_records.at(record)->core_type;
         delete distinct_new_records.at(record);

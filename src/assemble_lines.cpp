@@ -20,7 +20,7 @@ lines *assemble_lines(file *WuHistory
         (
             user_selected_core_number < static_cast<NUMBER>(core_types->size())
             &&
-            user_selected_core_number > 0
+            user_selected_core_number >= 0
         )
         {
             selected_core_type = new char

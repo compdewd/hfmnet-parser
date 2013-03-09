@@ -146,185 +146,199 @@ RETURN_CODE file_functions::write_averaged_new_records
 
     for (ARRAY_INDEX row = 0; row < averaged_new_records->size(); ++row)
     {
-        // Chipset and Model
-        char *slot_name =
-            SlotNames->fca.content_array
-                [
-                    algorithms::find
-                    (
-                         SlotNames->fca.content_array
-                        ,0
-                        ,SlotNames->fci.rows - 1
-                        ,columns::SlotNames::SlotName
-                        ,averaged_new_records->at(row)->slot_name
-                    )
-                ]
-                [columns::SlotNames::SlotName];
-        for (ARRAY_INDEX character = 0;
-             character <
-                 strlen
-                 (
-                     slot_name_to_chipset_and_model->at(slot_name)
-                 );
-             ++character)
+        if
+        (
+            algorithms::find
+            (
+                 SlotNames->fca.content_array
+                ,0
+                ,SlotNames->fci.rows - 1
+                ,columns::SlotNames::SlotName
+                ,averaged_new_records->at(row)->slot_name
+            )
+            != -1
+        )
         {
+            // Chipset and Model
+            char *slot_name =
+                SlotNames->fca.content_array
+                    [
+                        algorithms::find
+                        (
+                             SlotNames->fca.content_array
+                            ,0
+                            ,SlotNames->fci.rows - 1
+                            ,columns::SlotNames::SlotName
+                            ,averaged_new_records->at(row)->slot_name
+                        )
+                    ]
+                    [columns::SlotNames::SlotName];
+            for (ARRAY_INDEX character = 0;
+                 character <
+                     strlen
+                     (
+                         slot_name_to_chipset_and_model->at(slot_name)
+                     );
+                 ++character)
+            {
+                single_line_assembly.insert
+                (
+                     single_line_assembly.end()
+                    ,(slot_name_to_chipset_and_model->at(slot_name))[character]
+                );
+            }
             single_line_assembly.insert
             (
                  single_line_assembly.end()
-                ,slot_name_to_chipset_and_model->at(slot_name)[character]
+                ,(*field_delimiter)
             );
-        }
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
 
-        // Project
-        CHARSTR project =
-            common_functions::convert_to_charstr
-            (
-                 averaged_new_records->at(row)->project
-            );
-        for (ARRAY_INDEX character = 0;
-             character < strlen(project);
-             ++character)
-        {
+            // Project
+            CHARSTR project =
+                common_functions::convert_to_charstr
+                (
+                     averaged_new_records->at(row)->project
+                );
+            for (ARRAY_INDEX character = 0;
+                 character < strlen(project);
+                 ++character)
+            {
+                single_line_assembly.insert
+                (
+                     single_line_assembly.end()
+                    ,project[character]
+                );
+            }
+            delete [] project;
             single_line_assembly.insert
             (
                  single_line_assembly.end()
-                ,project[character]
+                ,(*field_delimiter)
             );
-        }
-        delete [] project;
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
 
-        // Time per frame
-        char *averaged_time_per_frame =
-            common_functions::convert_to_charstr
-            (
-                averaged_new_records->at(row)->averaged_time_per_frame
-            );
-        for (ARRAY_INDEX character = 0;
-             character < strlen(averaged_time_per_frame);
-             ++character)
-        {
+            // Time per frame
+            char *averaged_time_per_frame =
+                common_functions::convert_to_charstr
+                (
+                    averaged_new_records->at(row)->averaged_time_per_frame
+                );
+            for (ARRAY_INDEX character = 0;
+                 character < strlen(averaged_time_per_frame);
+                 ++character)
+            {
+                single_line_assembly.insert
+                (
+                     single_line_assembly.end()
+                    ,averaged_time_per_frame[character]
+                );
+            }
+            delete [] averaged_time_per_frame;
             single_line_assembly.insert
             (
                  single_line_assembly.end()
-                ,averaged_time_per_frame[character]
+                ,(*field_delimiter)
             );
-        }
-        delete [] averaged_time_per_frame;
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
 
-        // Points per day
-        char *averaged_points_per_day =
-            common_functions::convert_to_charstr
-            (
-                 averaged_new_records->at(row)->averaged_points_per_day
-            );
-        for (ARRAY_INDEX character = 0;
-             character < strlen(averaged_points_per_day);
-             ++character)
-        {
+            // Points per day
+            char *averaged_points_per_day =
+                common_functions::convert_to_charstr
+                (
+                     averaged_new_records->at(row)->averaged_points_per_day
+                );
+            for (ARRAY_INDEX character = 0;
+                 character < strlen(averaged_points_per_day);
+                 ++character)
+            {
+                single_line_assembly.insert
+                (
+                     single_line_assembly.end()
+                    ,averaged_points_per_day[character]
+                );
+            }
+            delete [] averaged_points_per_day;
             single_line_assembly.insert
             (
                  single_line_assembly.end()
-                ,averaged_points_per_day[character]
+                ,(*field_delimiter)
             );
-        }
-        delete [] averaged_points_per_day;
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
 
-        // Core type
-        for (ARRAY_INDEX character = 0;
-             character < strlen(averaged_new_records->at(row)->core_type);
-             ++character)
-        {
+            // Core type
+            for (ARRAY_INDEX character = 0;
+                 character < strlen(averaged_new_records->at(row)->core_type);
+                 ++character)
+            {
+                single_line_assembly.insert
+                (
+                     single_line_assembly.end()
+                    ,averaged_new_records->at(row)->core_type[character]
+                );
+            }
             single_line_assembly.insert
             (
                  single_line_assembly.end()
-                ,averaged_new_records->at(row)->core_type[character]
+                ,(*field_delimiter)
             );
-        }
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
 
-        // Core version
-        char *core_version =
-            common_functions::convert_to_charstr
-            (
-                 averaged_new_records->at(row)->core_version
-            );
-        for (ARRAY_INDEX character = 0;
-             character < strlen(core_version);
-             ++character)
-        {
+            // Core version
+            char *core_version =
+                common_functions::convert_to_charstr
+                (
+                     averaged_new_records->at(row)->core_version
+                );
+            for (ARRAY_INDEX character = 0;
+                 character < strlen(core_version);
+                 ++character)
+            {
+                single_line_assembly.insert
+                (
+                     single_line_assembly.end()
+                    ,core_version[character]
+                );
+            }
+            delete [] core_version;
             single_line_assembly.insert
             (
                  single_line_assembly.end()
-                ,core_version[character]
+                ,(*field_delimiter)
             );
-        }
-        delete [] core_version;
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
 
-        // Username
-        for (ARRAY_INDEX character = 0;
-             character < strlen(averaged_new_records->at(row)->username);
-             ++character)
-        {
+            // Username
+            for (ARRAY_INDEX character = 0;
+                 character < strlen(averaged_new_records->at(row)->username);
+                 ++character)
+            {
+                single_line_assembly.insert
+                (
+                     single_line_assembly.end()
+                    ,averaged_new_records->at(row)->username[character]
+                );
+            }
             single_line_assembly.insert
             (
                  single_line_assembly.end()
-                ,averaged_new_records->at(row)->username[character]
+                ,(*field_delimiter)
             );
-        }
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*field_delimiter)
-        );
 
-
-
-        // Date
-        for (ARRAY_INDEX character = 0;
-             character < DATE_LENGTH;
-             ++character)
-        {
+            // Date
+            for (ARRAY_INDEX character = 0;
+                 character < DATE_LENGTH;
+                 ++character)
+            {
+                single_line_assembly.insert
+                (
+                     single_line_assembly.end()
+                    ,averaged_new_records->at(row)->date[character]
+                );
+            }
             single_line_assembly.insert
             (
                  single_line_assembly.end()
-                ,averaged_new_records->at(row)->date[character]
+                ,(*end_of_line)
             );
         }
-        single_line_assembly.insert
-        (
-             single_line_assembly.end()
-            ,(*end_of_line)
-        );
     }
+
+
     LENGTH len_single_line_assembly = single_line_assembly.size();
     CHARSTR single_line = new char [len_single_line_assembly + 1];
     for (POSITION i = 0;
